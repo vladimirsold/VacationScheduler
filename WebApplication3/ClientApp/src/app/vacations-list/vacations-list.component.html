@@ -1,0 +1,16 @@
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="visible">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Start</th>
+    <th>End</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let v of topVacations">
+      <td>{{v.employeeId}}</td>
+      <td>{{v.start}}</td>
+      <td>{{v.end}}</td>
+  </tr>
+  </tbody>
+</table>
