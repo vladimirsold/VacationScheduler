@@ -12,16 +12,18 @@
     <form class="form-inline">
       <div class="form-group hidden">
         <div class="input-group">
-          <input name="datepicker"
-                 class="form-control"
-                 ngbDatepicker
-                 #datepicker="ngbDatepicker"
-                 [autoClose]="'outside'"
-                 (dateSelect)="onDateSelection($event)"
-                 [displayMonths]="2"
-                 [dayTemplate]="t"
-                 outsideDays="hidden"
-                 [startDate]="fromDate">
+          <label>
+            <input name="datepicker"
+                   class="form-control"
+                   ngbDatepicker
+                   #datepicker="ngbDatepicker"
+                   [autoClose]="'outside'"
+                   (dateSelect)="onDateSelection($event)"
+                   [displayMonths]="2"
+                   [dayTemplate]="t"
+                   outsideDays="hidden"
+                   [startDate]="fromDate">
+          </label>
           <ng-template #t let-date let-focused="focused">
         <span class="custom-day"
               [class.focused]="focused"

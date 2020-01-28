@@ -8,9 +8,9 @@
   </thead>
   <tbody>
   <tr *ngFor="let v of topVacations">
-      <td>{{v.employeeId}}</td>
-      <td>{{v.start}}</td>
-      <td>{{v.end}}</td>
+      <td>{{v.employee.name}}</td>
+      <td>{{v.start | date:"dd/MM/yyyy"}}</td>
+      <td>{{v.end | date:"dd/MM/yyyy"}}</td>
   </tr>
   </tbody>
 </table>

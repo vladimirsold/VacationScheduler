@@ -1,21 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import {VacationDataService} from '../vacation/vacation-data.service';
 import {Vacation} from '../vacation/vacation.model';
-import {EmployeeDataService} from '../employee/employee-data.service';
-import {Employee} from '../employee/employee.model';
+import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-vacations-list',
   templateUrl: './vacations-list.component.html',
   styleUrls: ['./vacations-list.component.css'],
-  providers: [VacationDataService, EmployeeDataService]
+  providers: [VacationDataService]
 })
 export class VacationsListComponent implements OnInit {
   private topVacations: Vacation[]
-  private employees: Employee[];
   visible = false;
-  constructor(private  vacationDataService: VacationDataService,
-              private employeeDataService: EmployeeDataService) {
+  constructor(private  vacationDataService: VacationDataService) {
   }
 
   ngOnInit() {
@@ -26,18 +23,9 @@ export class VacationsListComponent implements OnInit {
       });
     this.loadTopVacation();
   }
-  loadEmployee() {
-    this.employeeDataService.getEmployees()
-      .subscribe((data: Employee[]) => this.employees = data);
+  format(data) {
+    return new Date(data);
   }
-  selectName(id: number) {
-    for (let j of this.employees) {
-        if (j.id === id) {
-          return j.name;
-        }
-    }
-  }
-
   loadTopVacation() {
     this.vacationDataService.getTopVacations()
       .subscribe((data: Vacation[]) => {

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApplication3.Models;
+using VacationScheduler.Models;
 
-namespace WebApplication3.Controllers
+namespace VacationScheduler.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

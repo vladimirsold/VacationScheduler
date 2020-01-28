@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WebApplication3.Models;
+using VacationScheduler.Models;
 
-namespace WebApplication3
+namespace VacationScheduler
 {
     public class Startup
     {

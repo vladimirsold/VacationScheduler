@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApplication3.Models;
+using VacationScheduler.Models;
 
-namespace WebApplication3.Controllers
+namespace VacationScheduler.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -47,7 +47,8 @@ namespace WebApplication3.Controllers
         [HttpGet("Top")]
         public async Task<ActionResult<ICollection<Vacation>>> GetTopVacations()
         {
-            return await _context.Vacations.ToListAsync();
+            return await _context.Vacations.Include(v => v.Employee)
+                .ToListAsync();
         }
 
         // PUT: api/Vacations/5
