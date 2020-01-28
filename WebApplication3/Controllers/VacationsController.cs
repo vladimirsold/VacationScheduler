@@ -31,19 +31,14 @@ namespace VacationScheduler.Controllers
 
         // GET: api/Vacations/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ICollection<Vacation>>> GetVacation(int id)
+        public async Task<ActionResult<Vacation>> GetVacation(int id)
         {
-            //var vacation = await _context.Vacations.FindAsync(id);
-            var employeeVacation = await _context.Vacations.Where(x => x.EmployeeId == id).ToListAsync();
-            //if (vacation == null)
-            //{
-            //    return NotFound();
-            //}
-            if (employeeVacation == null)
+            var vacation = await _context.Vacations.FindAsync(id); 
+            if (vacation == null)
             {
                 return NotFound();
             }
-            return employeeVacation;
+            return vacation;
         }
 
         [HttpGet("Top")]
@@ -53,20 +48,14 @@ namespace VacationScheduler.Controllers
                 .GroupBy(v => new { v.EmployeeId })
                 .Select(g => new { g.Key.EmployeeId, minst = g.Min(o => o.Start) })
                 .ToListAsync();
-            var top = new List<Vacation>();
-            foreach (var e in dateNextVacation)
-            {
-                top.Add(_context.Vacations
-                    .Include(p=> p.Employee)
-                    .Where(x => (x.Start == e.minst)&(x.EmployeeId == e.EmployeeId))
-                    .First());    
-            }
-            return top;
+            return dateNextVacation
+                .Select(date => _context.Vacations
+                    .Include(p => p.Employee)
+                    .Where(x => (x.Start == date.minst) & (x.EmployeeId == date.EmployeeId))
+                    .First()).ToList();
         }
 
         // PUT: api/Vacations/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVacation(int id, Vacation vacation)
         {
@@ -97,8 +86,6 @@ namespace VacationScheduler.Controllers
         }
 
         // POST: api/Vacations
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult<Vacation>> PostVacation([FromBody]Vacation vacation)
         {
