@@ -11,6 +11,8 @@ namespace VacationScheduler.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+ 
     public class VacationsController : ControllerBase
     {
         private readonly EmployeesContext _context;
@@ -47,8 +49,19 @@ namespace VacationScheduler.Controllers
         [HttpGet("Top")]
         public async Task<ActionResult<ICollection<Vacation>>> GetTopVacations()
         {
-            return await _context.Vacations.Include(v => v.Employee)
+            var dateNextVacation = await _context.Vacations
+                .GroupBy(v => new { v.EmployeeId })
+                .Select(g => new { g.Key.EmployeeId, minst = g.Min(o => o.Start) })
                 .ToListAsync();
+            var top = new List<Vacation>();
+            foreach (var e in dateNextVacation)
+            {
+                top.Add(_context.Vacations
+                    .Include(p=> p.Employee)
+                    .Where(x => (x.Start == e.minst)&(x.EmployeeId == e.EmployeeId))
+                    .First());    
+            }
+            return top;
         }
 
         // PUT: api/Vacations/5
