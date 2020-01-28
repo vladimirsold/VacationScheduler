@@ -2,10 +2,10 @@
 <div class="jumbotron jumbotron-fluid mb-3">
   <h1 class="text-center">Vacation Scheduler</h1>
 </div>
+
   <div class="container">
-    <button class="btn btn-primary dropdown-toggle m-3"(click)="toggle()">Add employees</button>
-    <app-add-employee *ngIf="addEmployeeVisible" class="m-3"></app-add-employee>
+    <app-add-employee  class="m-3" (loaded)="updateVacationList()"></app-add-employee>
     <app-vacations-list ></app-vacations-list>
-    <app-add-vacations (loaded)="newVacationLoaded()"></app-add-vacations>
+    <app-add-vacations (loaded)="updateVacationList()"></app-add-vacations>
   </div>
 </body>

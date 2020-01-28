@@ -2,7 +2,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
 import {VacationDataService} from './vacation-data.service';
 import {Employee} from '../employee/employee.model';
 import {EmployeeDataService} from '../employee/employee-data.service';
-import {HttpResponse} from '@angular/common/http';
+import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {Vacation} from './vacation.model';
 import {NgbCalendar, NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 
@@ -20,7 +20,9 @@ export class VacationComponent {
   hoveredDate: NgbDate;
   fromDate: NgbDate;
   toDate: NgbDate;
-
+  alert = false;
+  alertType: string;
+  alertMessage: string;
   constructor(private employeeDataService: EmployeeDataService,
               private  vacationDataService: VacationDataService,
               private calendar: NgbCalendar,
@@ -38,8 +40,19 @@ export class VacationComponent {
     this.vacation.end = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day + 1)
     this.vacationDataService.createVacation(this.vacation)
       .subscribe((data: HttpResponse<Vacation>) => {
-        console.log(data);
-        this.loaded.emit();
+        if (data.ok) {
+          this.alertType = 'success';
+          this.alertMessage = 'Vacation success added';
+          this.alert = true;
+          setTimeout(() => this.alert = false, 4000);
+          this.loaded.emit();
+        }
+      }, (error: HttpErrorResponse) => {
+        console.log(error);
+        this.alertType = 'danger';
+        this.alertMessage = 'Can\'t create vacation in this date range';
+        this.alert = true;
+        setTimeout(() => this.alert = false, 4000);
       });
   }
 

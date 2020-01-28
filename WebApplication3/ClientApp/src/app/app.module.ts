@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { EmployeeComponent } from './employee/employee.component';
 import {VacationComponent} from './vacation/vacation.component';
-import {NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbAlertModule, NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
 import {VacationsListComponent} from './vacations-list/vacations-list.component';
 
 @NgModule({
@@ -24,7 +24,8 @@ import {VacationsListComponent} from './vacations-list/vacations-list.component'
     RouterModule.forRoot([
       {path: '', component: AppComponent, pathMatch: 'full'}
     ]),
-    NgbDatepickerModule
+    NgbDatepickerModule,
+    NgbAlertModule
   ],
   providers: [],
   bootstrap: [AppComponent]

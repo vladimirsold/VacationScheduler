@@ -8,11 +8,17 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let v of topVacations">
-      <td>{{v.employee.name}}</td>
-      <td>{{v.employee.title}}</td>
-      <td>{{v.start | date:"dd/MM/yyyy"}}</td>
-      <td>{{v.end | date:"dd/MM/yyyy"}}</td>
+  <tr *ngFor="let v of employees">
+      <td>{{v.name}}</td>
+      <td>{{v.title}}</td>
+
+        <td *ngIf="v.nextVacation; else emptyTd">{{v.nextVacation.start | date:"dd/MM/yyyy"}}</td>
+        <td *ngIf="v.nextVacation; else emptyTd">{{v.nextVacation.end | date:"dd/MM/yyyy"}}</td>
+
   </tr>
   </tbody>
 </table>
+
+<ng-template #emptyTd>
+  <td></td>
+</ng-template>

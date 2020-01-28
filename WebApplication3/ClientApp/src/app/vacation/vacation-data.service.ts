@@ -15,9 +15,6 @@ export class VacationDataService {
   getVacations() {
     return this.http.get(this.url);
   }
-  getTopVacations() {
-    return this.http.get(this.url + '/Top');
-  }
   createVacation(vacation: Vacation) {
     return this.http.post(this.url, vacation, {observe: 'response'});
   }

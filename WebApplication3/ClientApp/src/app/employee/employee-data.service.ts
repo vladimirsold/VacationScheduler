@@ -5,24 +5,26 @@ import {Employee} from './employee.model';
 @Injectable()
 export class EmployeeDataService {
 
-  private readonly url: string ;
+  private readonly apiUrl: string ;
 
   constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    this.url = baseUrl + 'api/Employees';
+    this.apiUrl = baseUrl + 'api/Employees';
   }
 
   getEmployees() {
-    return this.http.get(this.url);
+    return this.http.get(this.apiUrl);
   }
-
+  getEmployeesWithNextVacation() {
+    return this.http.get(this.apiUrl + '/NextVacation');
+  }
   createEmployee(employee: Employee) {
-    return this.http.post(this.url, employee, {observe: 'response'});
+    return this.http.post(this.apiUrl, employee, {observe: 'response'});
   }
   updateEmployee(employee: Employee) {
 
-    return this.http.put(this.url + '/' + employee.id, employee);
+    return this.http.put(this.apiUrl + '/' + employee.id, employee);
   }
   deleteEmployee(id: number) {
-    return this.http.delete(this.url + '/' + id);
+    return this.http.delete(this.apiUrl + '/' + id);
   }
 }

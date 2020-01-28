@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Employee} from './employee.model';
 import {EmployeeDataService} from './employee-data.service';
@@ -9,31 +9,28 @@ import {EmployeeDataService} from './employee-data.service';
   providers: [EmployeeDataService]
 })
 export class EmployeeComponent {
+  @Output() loaded = new EventEmitter();
+  visible = false;
   titles = ['Dev', 'QA', 'TeamLead'];
   employee: Employee = new Employee();
-  public employees: Employee[];
-  addMode = false;
-  name: string;
-  constructor(private dataService: EmployeeDataService) {
-    this.loadEmployees();
-    }
 
-  loadEmployees() {
-    this.dataService.getEmployees()
-      .subscribe((data: Employee[]) => this.employees = data);
+  constructor(private dataService: EmployeeDataService) {
   }
 
   save() {
     if (this.employee.id == null) {
       this.dataService.createEmployee(this.employee)
         .subscribe((data: HttpResponse<Employee>) => {
-          this.employees.push(data.body);
           console.log(data);
+          if (data.ok) {
+            this.loaded.emit();
+          }
         });
-    } else {
-      this.dataService.updateEmployee(this.employee)
-        .subscribe(data => this.loadEmployees());
     }
+  }
+
+  toggle() {
+    this.visible = !this.visible;
   }
 }
 

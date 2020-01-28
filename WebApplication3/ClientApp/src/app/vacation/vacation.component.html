@@ -1,5 +1,6 @@
 <div>
   <hr>
+  <ngb-alert *ngIf="alert" type="{{alertType}}" (close)="alert = false">{{alertMessage}}</ngb-alert>
   <div class="form-group">
     <h4 class="text-primary m-3">Add vacation</h4>
     <select  [(ngModel)]="vacation.employeeId" class="form-control" (click)="loadEmployees()" >
@@ -66,6 +67,7 @@
     <input type="button" value="Save" (click)="save()" class="btn btn-success " />
     <input type="button" value="Cancel"  class="btn btn-warning ml-3" />
   </div>
+
 </div>
 
 

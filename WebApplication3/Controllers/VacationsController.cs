@@ -41,20 +41,6 @@ namespace VacationScheduler.Controllers
             return vacation;
         }
 
-        [HttpGet("Top")]
-        public async Task<ActionResult<ICollection<Vacation>>> GetTopVacations()
-        {
-            var dateNextVacation = await _context.Vacations
-                .GroupBy(v => new { v.EmployeeId })
-                .Select(g => new { g.Key.EmployeeId, minst = g.Min(o => o.Start) })
-                .ToListAsync();
-            return dateNextVacation
-                .Select(date => _context.Vacations
-                    .Include(p => p.Employee)
-                    .Where(x => (x.Start == date.minst) & (x.EmployeeId == date.EmployeeId))
-                    .First()).ToList();
-        }
-
         // PUT: api/Vacations/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVacation(int id, Vacation vacation)
@@ -89,10 +75,15 @@ namespace VacationScheduler.Controllers
         [HttpPost]
         public async Task<ActionResult<Vacation>> PostVacation([FromBody]Vacation vacation)
         {
-            _context.Vacations.Add(vacation);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetVacation", new { id = vacation.Id }, vacation);
+            if (ModelState.IsValid)
+            {
+                _context.Vacations.Add(vacation);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetVacation", new { id = vacation.Id }, vacation);
+            }else
+            {
+                return StatusCode(406, "");
+            }
         }
 
         // DELETE: api/Vacations/5

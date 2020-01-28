@@ -14,6 +14,6 @@ namespace VacationScheduler.Models
         public string Name { get; set; }
         [Required]
         public string Title { get; set; }
- 
+        public Vacation NextVacation { get; set; }
     }
 }

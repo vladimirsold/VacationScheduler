@@ -27,6 +27,18 @@ namespace VacationScheduler.Controllers
             return await _context.Employees.ToListAsync();
         }
 
+        [HttpGet("NextVacation")]
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployeesWithNextVacation()
+        {
+            var employees =  await _context.Employees.ToListAsync();
+            foreach (var emp in employees)
+            {
+                emp.NextVacation = _context.Vacations
+                .Where(v => (v.EmployeeId == emp.Id) && (v.End > DateTime.Now)).ToList().OrderBy(x=>x.Start).FirstOrDefault();
+            }
+            return employees;
+        }
+
         // GET: api/Employees/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Employee>> GetEmployee(int id)
