@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using VacationScheduler.Models;
 
 namespace VacationScheduler.Controllers
@@ -12,12 +10,12 @@ namespace VacationScheduler.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
- 
+
     public class VacationsController : ControllerBase
     {
-        private readonly EmployeesContext _context;
+        private readonly SchedulerContext _context;
 
-        public VacationsController(EmployeesContext context)
+        public VacationsController(SchedulerContext context)
         {
             _context = context;
         }
@@ -33,7 +31,7 @@ namespace VacationScheduler.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Vacation>> GetVacation(int id)
         {
-            var vacation = await _context.Vacations.FindAsync(id); 
+            var vacation = await _context.Vacations.FindAsync(id);
             if (vacation == null)
             {
                 return NotFound();
@@ -67,7 +65,6 @@ namespace VacationScheduler.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
 
@@ -80,7 +77,8 @@ namespace VacationScheduler.Controllers
                 _context.Vacations.Add(vacation);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction("GetVacation", new { id = vacation.Id }, vacation);
-            }else
+            }
+            else
             {
                 return BadRequest(ModelState);
             }

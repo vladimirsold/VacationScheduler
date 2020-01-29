@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace VacationScheduler.Models
 {
-    public class Vacation: IValidatableObject
+    public class Vacation : IValidatableObject
     {
         [Key]
         public int Id { get; set; }
@@ -45,10 +44,10 @@ namespace VacationScheduler.Models
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             List<ValidationResult> errors = new List<ValidationResult>();
-            var _context = (EmployeesContext)validationContext
-                         .GetService(typeof(EmployeesContext));
+            var _context = (SchedulerContext)validationContext
+                         .GetService(typeof(SchedulerContext));
 
-            if(_context.Vacations.Where(x => (x.End >= this.Start) && (this.End >= x.Start) && (x.EmployeeId == this.EmployeeId)).Count() > 0)
+            if (_context.Vacations.Where(x => (x.End >= this.Start) && (this.End >= x.Start) && (x.EmployeeId == this.EmployeeId)).Count() > 0)
             {
                 errors.Add(new ValidationResult("Employee have vacation in this range of date"));
                 return errors;

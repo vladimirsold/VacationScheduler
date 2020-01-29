@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using VacationScheduler.Models;
 
 namespace VacationScheduler.Controllers
@@ -13,9 +12,9 @@ namespace VacationScheduler.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private readonly EmployeesContext _context;
+        private readonly SchedulerContext _context;
 
-        public EmployeesController(EmployeesContext context)
+        public EmployeesController(SchedulerContext context)
         {
             _context = context;
         }
@@ -30,11 +29,11 @@ namespace VacationScheduler.Controllers
         [HttpGet("NextVacation")]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployeesWithNextVacation()
         {
-            var employees =  await _context.Employees.ToListAsync();
+            var employees = await _context.Employees.ToListAsync();
             foreach (var emp in employees)
             {
                 emp.NextVacation = _context.Vacations
-                .Where(v => (v.EmployeeId == emp.Id) && (v.End > DateTime.Now)).ToList().OrderBy(x=>x.Start).FirstOrDefault();
+                .Where(v => (v.EmployeeId == emp.Id) && (v.End > DateTime.Now)).ToList().OrderBy(x => x.Start).FirstOrDefault();
             }
             return employees;
         }
