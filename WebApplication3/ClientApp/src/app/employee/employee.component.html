@@ -1,4 +1,4 @@
-<button class="btn btn-primary dropdown-toggle m-3"(click)="toggle()">Add employees</button>
+<button class="btn btn-primary dropdown-toggle m-3"(click)="toggle()" (focusout)="visible=false">Add employees</button>
 <div *ngIf="visible">
   <div class="form-group">
     <label>Name</label>

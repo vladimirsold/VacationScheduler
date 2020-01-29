@@ -82,7 +82,7 @@ namespace VacationScheduler.Controllers
                 return CreatedAtAction("GetVacation", new { id = vacation.Id }, vacation);
             }else
             {
-                return StatusCode(406, "");
+                return BadRequest(ModelState);
             }
         }
 

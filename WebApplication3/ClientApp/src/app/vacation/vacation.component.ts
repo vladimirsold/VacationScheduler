@@ -5,6 +5,7 @@ import {EmployeeDataService} from '../employee/employee-data.service';
 import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {Vacation} from './vacation.model';
 import {NgbCalendar, NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
+import {errorObject} from 'rxjs/internal-compatibility';
 
 @Component({
   selector: 'app-add-vacations',
@@ -48,7 +49,8 @@ export class VacationComponent {
           this.loaded.emit();
         }
       }, (error: HttpErrorResponse) => {
-        console.log(error);
+        console.log(error.error);
+
         this.alertType = 'danger';
         this.alertMessage = 'Can\'t create vacation in this date range';
         this.alert = true;
