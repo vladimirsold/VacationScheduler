@@ -77,7 +77,7 @@ namespace VacationScheduler.Models
                 .ToList();
 
             startEndPointVacations.Sort(
-                (x,y)=> x.Item3.CompareTo(x.Item3));
+                (x,y)=> x.Item3.CompareTo(y.Item3));
             foreach (var (title, isStartVacation, _) in startEndPointVacations)
             {
                 if (isStartVacation)
