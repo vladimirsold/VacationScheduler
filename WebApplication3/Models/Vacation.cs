@@ -16,7 +16,8 @@ namespace VacationScheduler.Models
         [Required]
         public DateTime End { get; set; }
 
-        static readonly List<Dictionary<string, int>> maxEmployeesTogether = new List<Dictionary<string, int>>(){
+        private  static readonly List<Dictionary<string, int>> MaxEmployeesInSameTime = 
+            new List<Dictionary<string, int>>(){
                 new Dictionary<string,int>()
                 {
                     ["Dev"] = 3
@@ -43,11 +44,12 @@ namespace VacationScheduler.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            List<ValidationResult> errors = new List<ValidationResult>();
+            var errors = new List<ValidationResult>();
             var _context = (SchedulerContext)validationContext
                          .GetService(typeof(SchedulerContext));
 
-            if (_context.Vacations.Where(x => (x.End >= this.Start) && (this.End >= x.Start) && (x.EmployeeId == this.EmployeeId)).Count() > 0)
+            if (_context.Vacations.Where(x => (x.End >= this.Start) 
+                                              && (this.End >= x.Start) && (x.EmployeeId == this.EmployeeId)).Any())
             {
                 errors.Add(new ValidationResult("Employee have vacation in this range of date"));
                 return errors;
@@ -60,26 +62,28 @@ namespace VacationScheduler.Models
                 ["QA"] = 0,
                 ["TeamLead"] = 0
             };
-            var title = _context.Employees.Find(EmployeeId).Title;
-            employeesTogetherInPoint[title]++;
-            var query = _context.Vacations.Join(_context.Employees,
-                v => v.EmployeeId,
-                e => e.Id,
-                (v, e) => new { e.Title, v.Start, v.End }
-                );
-            var intersectionVacations = query
+            var titleCurrentEmployee = _context.Employees.Find(EmployeeId).Title;
+            employeesTogetherInPoint[titleCurrentEmployee]++;
+            var intersectVacations = _context.Vacations.Join(
+                    _context.Employees,
+                    v => v.EmployeeId,
+                    e => e.Id,
+                    (v, e) => new { e.Title, v.Start, v.End })
                 .Where(x => (x.End >= this.Start) && (this.End >= x.Start))
-                .ToList()
-                .SelectMany(x => new List<ValueTuple<string, bool, DateTime>>() { (x.Title, true, x.Start), (x.Title, false, x.End) })
+                .ToList();
+            var startEndPointVacations = intersectVacations
+                .SelectMany(x => new List<ValueTuple<string, bool, DateTime>>() 
+                    { (x.Title, true, x.Start), (x.Title, false, x.End) })
                 .ToList();
 
-            intersectionVacations.OrderBy(x => x.Item3);
-            foreach (var e in intersectionVacations)
+            startEndPointVacations.Sort(
+                (x,y)=> x.Item3.CompareTo(x.Item3));
+            foreach (var (title, isStartVacation, _) in startEndPointVacations)
             {
-                if (e.Item2)
+                if (isStartVacation)
                 {
-                    employeesTogetherInPoint[e.Item1]++;
-                    if (!IsValidDate(employeesTogetherInPoint, title))
+                    employeesTogetherInPoint[title]++;
+                    if (!IsValidDate(employeesTogetherInPoint, titleCurrentEmployee))
                     {
                         errors.Add(new ValidationResult("Limit has been reached"));
                         break;
@@ -87,7 +91,7 @@ namespace VacationScheduler.Models
                 }
                 else
                 {
-                    employeesTogetherInPoint[e.Item1]--;
+                    employeesTogetherInPoint[title]--;
                 }
             }
             return errors;
@@ -95,14 +99,15 @@ namespace VacationScheduler.Models
 
         bool IsValidDate(Dictionary<string, int> employeesInPoint, string title)
         {
-            var maxForCurrentEmployee = maxEmployeesTogether.Where(x => x.Keys.Contains(title));
+            var maxForCurrentEmployee = MaxEmployeesInSameTime
+                .Where(x => x.Keys.Contains(title));
 
-            foreach (var e in maxForCurrentEmployee)
+            foreach (var rule in maxForCurrentEmployee)
             {
                 var isNotValid = true;
-                foreach (var key in e.Keys)
+                foreach (var key in rule.Keys)
                 {
-                    isNotValid &= (employeesInPoint[key] == e[key]);
+                    isNotValid &= (employeesInPoint[key] == rule[key]);
                 }
                 if (isNotValid)
                 {

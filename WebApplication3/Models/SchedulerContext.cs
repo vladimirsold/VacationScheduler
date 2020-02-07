@@ -11,5 +11,9 @@ namespace VacationScheduler.Models
         {
             Database.EnsureCreated();
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+        }
     }
 }

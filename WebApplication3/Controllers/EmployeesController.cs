@@ -33,7 +33,7 @@ namespace VacationScheduler.Controllers
             foreach (var emp in employees)
             {
                 emp.NextVacation = _context.Vacations
-                .Where(v => (v.EmployeeId == emp.Id) && (v.End > DateTime.Now)).ToList().OrderBy(x => x.Start).FirstOrDefault();
+                .Where(v => (v.EmployeeId == emp.Id) && (v.End > DateTime.Now)).OrderBy(x => x.Start).FirstOrDefault();
             }
             return employees;
         }
